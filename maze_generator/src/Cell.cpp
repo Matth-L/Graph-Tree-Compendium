@@ -64,3 +64,8 @@ int Cell::getY() const
 {
     return coordinate_y;
 }
+
+int Cell::getWeight() const
+{
+    return weight_;
+}

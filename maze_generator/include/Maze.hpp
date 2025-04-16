@@ -11,8 +11,11 @@
 #include <random>
 #include <ctime>
 #include <random>
+#include <unordered_map>
 
 #include "Cell.hpp"
+
+#define INF 100000000
 
 using namespace std;
 
@@ -33,7 +36,7 @@ public:
      *  @brief generate the maze using the grow tree algorithm
      *
      ***********************************************/
-    Maze generate(int w, int h);
+    void generate(int w, int h);
 
     /**********************************************
      * @brief print the maze
@@ -95,13 +98,34 @@ public:
      * @brief Add a cell to a stack, put vistied to true, increment the id
      *
      ***********************************************/
-    void addToStack(Cell &cell, int previous_id);
+    void addToStack(Cell &cell);
+
+    /**********************************************
+     * @brief Moves from one cell to another
+     *
+     * @param start
+     * @return int the id of the next cell
+     ***********************************************/
+    int moveToNextCell(Cell &start);
+
+    Cell &getCell(int x, int y);
+
+    void setX_Y_Neighbor(int &previous_x, int &previous_y, Cell::Direction dire, int &new_x, int &new_y);
+
+    int getWidth() const;
+    int getHeight() const;
+    Cell &getCellFromID(int id);
+
+    void print_id_map() const;
 
 private:
     int width_;
     int height_;
     vector<vector<Cell>> grid_;
     stack<Cell *> list_of_cell_;
+    int nextID_ = 0;
+
+    unordered_map<int, pair<int, int>> idToCoordinates_;
 
     // random number generation
     static inline mt19937 sGenerator_{random_device{}()};

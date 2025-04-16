@@ -19,6 +19,9 @@ private:
     int coordinate_x;
     int coordinate_y;
 
+    // a cell could be "heavier" than another, for example if its a swamp
+    int weight_ = 1;
+
 public:
     enum Direction
     {
@@ -126,6 +129,8 @@ public:
      * @return int
      ***********************************************/
     int getY() const;
+
+    int getWeight() const;
 };
 
 #endif // CELL_H
