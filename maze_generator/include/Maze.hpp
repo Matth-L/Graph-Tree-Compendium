@@ -19,6 +19,8 @@ using namespace std;
 class Maze
 {
 public:
+    Maze();
+
     /**********************************************
      * @brief Construct a new Maze
      *
@@ -31,7 +33,7 @@ public:
      *  @brief generate the maze using the grow tree algorithm
      *
      ***********************************************/
-    void generate();
+    Maze generate(int w, int h);
 
     /**********************************************
      * @brief print the maze

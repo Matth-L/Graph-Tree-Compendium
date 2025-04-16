@@ -1,6 +1,11 @@
 #include "Maze.hpp"
 #include <iostream>
 #include <algorithm>
+#include <iomanip>
+
+Maze::Maze()
+{
+}
 
 Maze::Maze(int w, int h) : width_(w), height_(h), grid_(h, vector<Cell>(w))
 {
@@ -28,7 +33,7 @@ void Maze::print() const
             const array<bool, 4> &walls = cell.getWalls();
 
             // top wall
-            cout << (walls[Cell::UP] ? "+--" : "+  ");
+            cout << (walls[Cell::UP] ? "+----" : "+    ");
         }
         // EOL top walls
         cout << "+\n";
@@ -38,7 +43,8 @@ void Maze::print() const
         {
             const Cell &cell = grid_[y][x];
             const array<bool, 4> &walls = cell.getWalls();
-            cout << (walls[Cell::LEFT] ? "| " : "  ") << cell.getID();
+            cout << (walls[Cell::LEFT] ? "| " : "  ");
+            cout << setw(2) << cell.getID() << " ";
         }
         // EOL left walls and cells
         cout << "|\n";
@@ -47,7 +53,7 @@ void Maze::print() const
     // bottom wall for the last row
     for (int x = 0; x < width_; ++x)
     {
-        cout << "+--";
+        cout << "+----";
     }
     cout << "+\n";
 }
@@ -95,7 +101,8 @@ void Maze::break_wall(Cell &current, Cell &next, Cell::Direction direction)
     }
 }
 
-pair<int, int> Maze::get_neighbor_coordinate(int x, int y, Cell::Direction direction)
+pair<int, int>
+Maze::get_neighbor_coordinate(int x, int y, Cell::Direction direction)
 {
     int nx = x;
     int ny = y;
@@ -134,7 +141,9 @@ Cell &Maze::pick_new_cell()
     int py = previous_cell->getY();
 
     // Try each direction in a random order
-    vector<Cell::Direction> directions = {Cell::UP, Cell::LEFT, Cell::DOWN, Cell::RIGHT};
+    vector<Cell::Direction> directions =
+        {Cell::UP, Cell::LEFT, Cell::DOWN, Cell::RIGHT};
+
     shuffle(directions.begin(), directions.end(), sGenerator_);
 
     for (Cell::Direction direction : directions)
@@ -153,12 +162,21 @@ Cell &Maze::pick_new_cell()
                 break_wall(*previous_cell, chosen_cell, direction);
                 addToStack(chosen_cell, previous_cell->getID());
 
-                cout << "direction " << direction << endl;
-                cout << "prev " << previous_cell->numberOfWall() << endl;
-                cout << "next " << chosen_cell.numberOfWall() << endl;
-
                 return chosen_cell;
             }
         }
     }
+    list_of_cell_.pop();
 }
+
+Maze Maze::generate(int h, int w)
+{
+    Maze labyrinth = Maze(h, w);
+    labyrinth.pick_starter_position();
+    while (!labyrinth.list_of_cell_.empty())
+    {
+        labyrinth.pick_new_cell();
+    }
+    labyrinth.print();
+    return labyrinth;
+};
