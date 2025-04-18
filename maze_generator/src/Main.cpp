@@ -1,6 +1,6 @@
 #include "Maze.hpp"
 #include "AStar.hpp"
-#include "Dijkstra.hpp"
+#include "Bfs.hpp"
 #include <iostream>
 
 using namespace std;
@@ -12,11 +12,11 @@ int main()
     Cell start = maze.getCellFromID(5);
     Cell end = maze.getCellFromID(25);
 
-    Dijkstra dijkstra(maze, start.getX(), start.getY(), end.getX(), end.getY());
+    Bfs Bfs(maze, start.getX(), start.getY(), end.getX(), end.getY());
 
     AStar astar(maze, start.getX(), start.getY(), end.getX(), end.getY());
 
-    dijkstra.solve(start, end);
+    Bfs.solve(start, end);
     astar.solveAndPrint();
 
     return 0;

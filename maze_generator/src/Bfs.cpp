@@ -1,15 +1,15 @@
-#include "Dijkstra.hpp"
+#include "Bfs.hpp"
 
-Dijkstra::Dijkstra(Maze &maze, int startX, int startY, int endX, int endY)
+Bfs::Bfs(Maze &maze, int startX, int startY, int endX, int endY)
     : maze_(maze), startX_(startX), startY_(startY), endX_(endX), endY_(endY) {
       };
 
-bool Dijkstra::isVisited(Cell &to_check) const
+bool Bfs::isVisited(Cell &to_check) const
 {
     return visited_cell.find(to_check.getID()) != visited_cell.end();
 }
 
-map<int, PairInfo> &Dijkstra::initToMap(Cell &to_init)
+map<int, PairInfo> &Bfs::initToMap(Cell &to_init)
 {
     int cellID = to_init.getID();
 
@@ -19,7 +19,7 @@ map<int, PairInfo> &Dijkstra::initToMap(Cell &to_init)
     return pathInfo;
 }
 
-map<int, PairInfo> &Dijkstra::updateToMap(Cell &from, Cell &previous, int distance)
+map<int, PairInfo> &Bfs::updateToMap(Cell &from, Cell &previous, int distance)
 {
     int prev = previous.getID();
     int fromID = from.getID();
@@ -31,7 +31,7 @@ map<int, PairInfo> &Dijkstra::updateToMap(Cell &from, Cell &previous, int distan
 
     return pathInfo;
 }
-map<int, PairInfo> &Dijkstra::updateToMap(Cell &from, int distance)
+map<int, PairInfo> &Bfs::updateToMap(Cell &from, int distance)
 {
     int fromID = from.getID();
 
@@ -40,7 +40,7 @@ map<int, PairInfo> &Dijkstra::updateToMap(Cell &from, int distance)
     return pathInfo;
 }
 
-void Dijkstra::initUnvisitedCell()
+void Bfs::initUnvisitedCell()
 {
     int total = maze_.getWidth() * maze_.getHeight();
 
@@ -49,14 +49,14 @@ void Dijkstra::initUnvisitedCell()
         unvisited_cell.insert(i);
     }
 }
-void Dijkstra::swapFromUnvisitied(Cell &cell)
+void Bfs::swapFromUnvisitied(Cell &cell)
 {
     int id = cell.getID();
     visited_cell.insert(id);
     unvisited_cell.erase(id);
 }
 
-Cell &Dijkstra::backtrackToClosestCell()
+Cell &Bfs::backtrackToClosestCell()
 {
     Cell *closest = nullptr;
     for (int id : visited_cell)
@@ -89,7 +89,7 @@ Cell &Dijkstra::backtrackToClosestCell()
     return *closest;
 }
 
-Cell &Dijkstra::findShortestPath(Cell &start)
+Cell &Bfs::findShortestPath(Cell &start)
 {
     updateToMap(start, 0);
 
@@ -145,10 +145,10 @@ Cell &Dijkstra::findShortestPath(Cell &start)
     return *chosen_cell;
 }
 
-void Dijkstra::solve(Cell &start, Cell &end)
+void Bfs::solve(Cell &start, Cell &end)
 {
 
-    cout << "dijkstra cell taken :" << endl;
+    cout << "Bfs cell taken :" << endl;
     initUnvisitedCell();
 
     while (start.getID() != end.getID())

@@ -11,14 +11,14 @@
 using PairInfo = std::pair<int, int>;
 using Coordinate = pair<int, int>;
 
-class Dijkstra
+class Bfs
 {
 
 public:
-    Dijkstra(Maze &maze, int startX, int startY, int endX, int endY);
+    Bfs(Maze &maze, int startX, int startY, int endX, int endY);
 
     /**********************************************
-     * @brief Use dijkstra algorithm to find the shortest path from a
+     * @brief Use Bfs algorithm to find the shortest path from a
      * cell to another
      *
      * @param start
