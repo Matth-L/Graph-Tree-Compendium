@@ -4,13 +4,19 @@
 #include <map>
 #include <unordered_map>
 #include <iostream>
+#include <vector>
 #include <array>
+#include <algorithm>
 
-using pair_info = std::pair<int, int>;
+using PairInfo = std::pair<int, int>;
+using Coordinate = pair<int, int>;
+
 class Dijkstra
 {
+
 public:
-    Dijkstra(Maze &maze) : maze(maze) {}
+    Dijkstra(Maze &maze, int startX, int startY, int endX, int endY);
+
     /**********************************************
      * @brief Use dijkstra algorithm to find the shortest path from a
      * cell to another
@@ -18,13 +24,14 @@ public:
      * @param start
      * @param end
      ***********************************************/
-    Cell &findShortestPath(Cell &start, Cell &end);
+    Cell &findShortestPath(Cell &start);
 
     /**********************************************
      * @brief Calls recursively findShortespath until start = end
      *
      * @param start
      * @param end
+     * @return the paht vector
      ***********************************************/
     void solve(Cell &start, Cell &end);
 
@@ -55,9 +62,15 @@ public:
      * @return true
      * @return false
      ***********************************************/
-    bool is_visited(Cell &to_check) const;
+    bool isVisited(Cell &to_check) const;
 
-    map<int, pair_info> &initToMap(Cell &to_init);
+    /**********************************************
+     * @brief init the map
+     *
+     * @param to_init
+     * @return map<int, PairInfo> an initialized map
+     ***********************************************/
+    map<int, PairInfo> &initToMap(Cell &to_init);
 
     /**********************************************
      * @brief updates the cell to hte map with distance and value
@@ -65,10 +78,10 @@ public:
      * @param from
      * @param to
      * @param distance
-     * @return map<int, pair_info>&
+     * @return map<int, PairInfo>&
      ***********************************************/
-    map<int, pair_info> &updateToMap(Cell &from, Cell &to, int distance);
-    map<int, pair_info> &updateToMap(Cell &from, int distance);
+    map<int, PairInfo> &updateToMap(Cell &from, Cell &to, int distance);
+    map<int, PairInfo> &updateToMap(Cell &from, int distance);
 
     /**********************************************
      * @brief backtrack to the closest cell if we cannot move forward
@@ -87,7 +100,11 @@ public:
     Maze &setMaze(Maze to_add);
 
 private:
-    Maze &maze;
+    Maze &maze_;
+    int startX_;
+    int startY_;
+    int endX_;
+    int endY_;
 
     unordered_map<int, std::pair<int, int>> idToCoordinates_; // Map IDs to coordinates
 
@@ -107,5 +124,5 @@ private:
      * @brief {cell_id : {shortest_distance,previous_cell}
      *
      ***********************************************/
-    map<int, pair_info> pathInfo;
+    map<int, PairInfo> pathInfo;
 };

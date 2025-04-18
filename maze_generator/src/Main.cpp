@@ -1,16 +1,23 @@
-#include "Cell.hpp"
 #include "Maze.hpp"
+#include "AStar.hpp"
 #include "Dijkstra.hpp"
-#include <random>
 #include <iostream>
+
+using namespace std;
 
 int main()
 {
-    Maze a;
-    a.generate(8, 8);
-    Cell start = a.getCellFromID(0);
-    Cell end = a.getCellFromID(62);
-    Dijkstra b(a);
-    b.solve(start, end);
-    b.printMap();
+    Maze maze(8, 8);
+    maze.generate(8, 8);
+    Cell start = maze.getCellFromID(5);
+    Cell end = maze.getCellFromID(25);
+
+    Dijkstra dijkstra(maze, start.getX(), start.getY(), end.getX(), end.getY());
+
+    AStar astar(maze, start.getX(), start.getY(), end.getX(), end.getY());
+
+    dijkstra.solve(start, end);
+    astar.solveAndPrint();
+
+    return 0;
 }
