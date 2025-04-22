@@ -19,6 +19,33 @@ double KDnode::distanceSquared(KDnode* other)
     return dist;
 }
 
+KDnode* KDnode::minNode(KDnode* other1, KDnode* other2, KDnode* other3, int dim)
+{
+    KDnode* minNode = nullptr;
+
+    // Compare other1 and other2
+    if (other1 != nullptr && (minNode == nullptr || 
+        other1->coordinates[dim] < minNode->coordinates[dim]))
+    {
+        minNode = other1;
+    }
+
+    if (other2 != nullptr && (minNode == nullptr || 
+        other2->coordinates[dim] < minNode->coordinates[dim]))
+    {
+        minNode = other2;
+    }
+
+    // Compare the result with other3
+    if (other3 != nullptr && (minNode == nullptr || 
+        other3->coordinates[dim] < minNode->coordinates[dim]))
+    {
+        minNode = other3;
+    }
+
+    return minNode;
+}
+
 void KDnode::printNode()
 {
     std::cout << "(";
@@ -30,5 +57,5 @@ void KDnode::printNode()
             std::cout << ", ";
         }
     }
-    std::cout << ")" << std::endl;
+    std::cout << ")";
 }

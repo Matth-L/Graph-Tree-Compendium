@@ -1,21 +1,5 @@
 #include "KDtree.h"
 
-KDtree::KDtree(vector<KDnode>* points, int dim)
-{
-    dimension = dim;
-    root = nullptr;
-    
-    for (auto point : *points)
-    {
-        add(&point);
-    }
-}
-
-KDnode* KDtree::findNearestNeighbor(KDnode* target)
-{
-    return nearestNeighborAuxiliary(root, target, 0);
-}
-
 KDnode* KDtree::nearestNeighborAuxiliary(KDnode* current, KDnode* target, int depth)
 {
     // Base case: if the current node is null, return null
@@ -54,6 +38,42 @@ KDnode* KDtree::nearestNeighborAuxiliary(KDnode* current, KDnode* target, int de
     return best;
 }
 
+KDnode* KDtree::findNearestNeighbor(KDnode* target)
+{
+    return nearestNeighborAuxiliary(root, target, 0);
+}
+
+KDnode* KDtree::findMinDimAuxiliary(KDnode* current, int dim, int depth)
+{
+    if (current == nullptr) return nullptr;
+
+    // Compare the current node's coordinate with the target coordinate
+    int cd = depth % dimension;
+
+    if (cd == dim)
+    {
+        // If the current dimension is the same as the target dimension,
+        // go left first
+        if (current->left == nullptr) return current;
+        return findMinDimAuxiliary(current->left, dim, depth + 1);
+    }
+
+    // If the current dimension is not the same as the target dimension,
+    // check both branches
+    return KDnode::minNode(
+        current,
+        findMinDimAuxiliary(current->left, dim, depth + 1),
+        findMinDimAuxiliary(current->right, dim, depth + 1),
+        dim);
+}
+
+
+KDnode* KDtree::findMinDim(KDnode* node, int dim)
+{
+    return findMinDimAuxiliary(node, dim, 0);
+}
+
+
 
 KDnode* KDtree::addAuxiliary(KDnode* current, KDnode* node, int depth)
 {
@@ -74,7 +94,6 @@ KDnode* KDtree::addAuxiliary(KDnode* current, KDnode* node, int depth)
     {
         current->right = addAuxiliary(current->right, node, depth + 1);
     }
-    
 
     return current;
 }
@@ -89,9 +108,51 @@ void KDtree::add(KDnode* node)
     addAuxiliary(root, node, 0);
 }
 
+KDnode* KDtree::removeAuxiliary(KDnode* current, KDnode* node, int depth)
+{
+    if ( current == nullptr ) return nullptr;
+
+    int cd = depth % dimension;
+
+    if ( current->isEqual(node) )
+    {
+        // Node found, remove it
+        if ( current->right != nullptr )
+        {
+            KDnode* minNode = findMinDim(current->right, cd);
+            // Copy the coordinates of the minimum node to the current node
+            current->coordinates = minNode->coordinates;
+            // Remove the minimum node from the right subtree
+            current->right = removeAuxiliary(current->right, minNode, depth + 1);
+        }
+        else if ( current->left != nullptr )
+        {
+            KDnode* minNode = findMinDim(current->left, cd);
+            current->coordinates = minNode->coordinates;
+            current->right = removeAuxiliary(current->left, minNode, depth + 1);
+            current->left = nullptr; // Set left to null since we moved the node
+        }
+        else // Node to delete is a leaf
+        {
+            return nullptr;
+        }
+        return current;
+    }
+
+    if ( node->coordinates.at(cd) < current->coordinates.at(cd) )
+    {
+        current->left = removeAuxiliary(current->left, node, depth + 1);
+    }
+    else
+    {
+        current->right = removeAuxiliary(current->right, node, depth + 1);
+    }
+    return current;
+}
+
 void KDtree::remove(KDnode* node)
 {
-    // Implement remove logic here
+    removeAuxiliary(root, node, 0);
 }
 
 bool KDtree::searchAuxiliary(KDnode* current, KDnode* target, int depth)
