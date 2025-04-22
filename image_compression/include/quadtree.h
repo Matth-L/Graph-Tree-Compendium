@@ -180,9 +180,9 @@ public:
 
     // Construct a new branching node given 4 sons
     QuadNode(QuadTree<T>* son0,
-	     QuadTree<T>* son1,
-	     QuadTree<T>* son2,
-	     QuadTree<T>* son3)
+        QuadTree<T>* son1,
+        QuadTree<T>* son2,
+        QuadTree<T>* son3)
     {
 	// Assign sons
 	sons[0] = son0;
@@ -205,21 +205,21 @@ public:
     // Return the number of leaves in this qtree
     inline int nLeaves() const
     {
-      int n = 0;
-      for (int i = 0; i < nQuadDir; i++)
+        int n = 0;
+        for (int i = 0; i < nQuadDir; i++)
 	if (sons[i] != nullptr)
-	  n += sons[i]->nLeaves();
-      return n;
+	    n += sons[i]->nLeaves();
+        return n;
     }
 
     // Return the number of nodes in this qtree (excluding leaves)
     inline int nNodes() const
     {
-      int n = 1;
-      for (int i = 0; i < nQuadDir; i++)
+        int n = 1;
+        for (int i = 0; i < nQuadDir; i++)
 	if (sons[i] != nullptr)
-	  n += sons[i]->nNodes();
-      return n;
+	    n += sons[i]->nNodes();
+        return n;
     }
 
     // Return the number of (sub)trees in this qtree (nodes and leaves)
